@@ -1,0 +1,17 @@
+version: "3.6"
+volumes:
+  shared-workspace:
+    name: "hadoop-distributed-file-system"
+    driver: local
+networks:
+  default:
+    name: kafka-spark-network
+    external: true
+services:
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"
+    volumes:
+     - shared-workspace:/opt/workspace
