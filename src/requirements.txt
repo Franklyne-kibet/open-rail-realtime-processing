@@ -1,0 +1,5 @@
+stomp.py>=8.0.0
+PyXB~=1.2.6
+kafka-python==1.4.6
+confluent_kafka
+requests
