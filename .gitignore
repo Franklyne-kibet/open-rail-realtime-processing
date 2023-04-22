@@ -1,0 +1,5 @@
+.idea
+.ipynb_checkpoints/
+.history
+**/cassandra-data/*
+**__pycache__/
