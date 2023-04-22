@@ -13,9 +13,6 @@ RUN apt-get update -y && \
     mkdir /usr/bin/spark-${spark_version}-bin-hadoop${hadoop_version}/logs && \
     rm spark.tgz
 
-# Set Spark classpath
-ENV SPARK_DIST_CLASSPATH ${SPARK_HOME}/jars/*:${SPARK_HOME}/lib/*
-
 ENV SPARK_HOME /usr/bin/spark-${spark_version}-bin-hadoop${hadoop_version}
 ENV SPARK_MASTER_HOST spark-master
 ENV SPARK_MASTER_PORT 7077
