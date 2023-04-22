@@ -3,7 +3,6 @@ from pyspark.sql.functions import col, from_json
 
 from settings import KAFKA_TOPIC,TRAIN_SCHEMA
 
-
 def read_from_kafka(consume_topic: str):
     # Spark Streaming DataFrame, connect to Kafka topic served at host in bootrap.servers option
     df_kafka_raw = spark \
@@ -18,6 +17,9 @@ def read_from_kafka(consume_topic: str):
 
 def parse_train_from_kafka_message(df_raw, schema):
     assert df_raw.isStreaming is True, "DataFrame doesn't receive streaming data"
+    
+    df_raw = df_raw.selectExpr("CAST(key AS STRING)","CAST(value AS STRING)")
+    
     # Convert the value column from JSON string to PySpark schema
     df_json = df_raw.select(from_json(col("value"), schema).alias("train"))
 
@@ -51,7 +53,7 @@ def write_cassandra(df):
         return write_query
     else:
         print("Data is not streaming")
-        
+
 def sink_console(df, output_mode: str = 'complete', processing_time: str = '5 seconds'):
     write_query = df.writeStream \
         .outputMode(output_mode) \
@@ -65,13 +67,18 @@ if __name__ == "__main__":
     spark = SparkSession \
         .builder \
         .appName("Spark-Trains") \
-        .config("spark.cassandra.connection.host", "172.20.0.5") \
+        .config("spark.cassandra.connection.host", "172.19.0.4") \
         .config("spark.cassandra.connection.port", "9042") \
         .config("spark.cassandra.output.consistency.level", "ONE") \
         .getOrCreate()
+        
+    spark.sparkContext.setLogLevel('WARN')
 
     # Set the configuration option
     spark.conf.set("spark.sql.streaming.forceDeleteTempCheckpointLocation", "true")
+    
+    # Set the configuration to stop the job gracefully on shutdown
+    spark.conf.set("spark.streaming.stopGracefullyOnShutdown", "true")
     
     # read_streaming data
     df_consume_stream=read_from_kafka(consume_topic=KAFKA_TOPIC)

@@ -13,11 +13,6 @@ RUN apt-get update -y && \
     mkdir /usr/bin/spark-${spark_version}-bin-hadoop${hadoop_version}/logs && \
     rm spark.tgz
 
-# Download and add Cassandra connecting jar
-RUN mkdir ${SPARK_HOME}/lib
-RUN curl -L -O https://repo1.maven.org/maven2/com/datastax/oss/java-driver-core/4.13.0/java-driver-core-4.13.0.jar
-RUN mv java-driver-core-4.13.0.jar ${SPARK_HOME}/lib/
-
 # Set Spark classpath
 ENV SPARK_DIST_CLASSPATH ${SPARK_HOME}/jars/*:${SPARK_HOME}/lib/*
 

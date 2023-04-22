@@ -122,4 +122,4 @@ services:
     ports:
       - "9042:9042"
     volumes:
-     - shared-workspace:/opt/workspace
+     - ./cassandra-data:/var/lib/cassandra/data:rw
