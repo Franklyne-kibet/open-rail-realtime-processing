@@ -17,9 +17,9 @@ except ModuleNotFoundError:
     logging.error("Class files not found - please configure the client following steps in README.md!")
 
 
-USERNAME = 'DARWINca7163a1-cc87-4133-a6a0-8703744e8f23'
-PASSWORD = 'e43cea40-4aac-4d21-a0cc-c28cf26cd940'
-HOSTNAME = 'darwin-dist-44ae45.nationalrail.co.uk'
+USERNAME = ''
+PASSWORD = ''
+HOSTNAME = ''
 HOSTPORT = 61613
 # Always prefixed by /topic/ (it's not a queue, it's a topic)
 TOPIC = '/topic/darwin.pushport-v16'
