@@ -67,7 +67,7 @@ if __name__ == "__main__":
     spark = SparkSession \
         .builder \
         .appName("Spark-Trains") \
-        .config("spark.cassandra.connection.host", "172.19.0.4") \
+        .config("spark.cassandra.connection.host", "172.19.0.2") \
         .config("spark.cassandra.connection.port", "9042") \
         .config("spark.cassandra.output.consistency.level", "ONE") \
         .getOrCreate()

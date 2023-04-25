@@ -4,3 +4,8 @@ kafka-python==1.4.6
 confluent_kafka
 requests
 pyspark==3.3.1
+avro
+faust
+fastavro
+cassandra-driver
+streamlit
