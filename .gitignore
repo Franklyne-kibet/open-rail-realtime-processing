@@ -3,3 +3,4 @@
 .history
 **/cassandra-data/*
 **__pycache__/
+**/dist/*
