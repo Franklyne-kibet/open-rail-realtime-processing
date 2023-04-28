@@ -1,0 +1,6 @@
+dash 
+dash-renderer 
+dash-html-components 
+dash-core-components 
+jinja2
+psycopg2-binary
