@@ -4,3 +4,4 @@
 **/cassandra-data/*
 **__pycache__/
 **/dist/*
+**/train_data_postgres/*
