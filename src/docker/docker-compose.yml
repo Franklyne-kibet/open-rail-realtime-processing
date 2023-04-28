@@ -124,15 +124,21 @@ services:
     volumes:
      - ./cassandra-data:/var/lib/cassandra/data:rw
 
-  ## Grafana
-  grafana:
-    image: grafana/grafana:9.0.4
-    ports:
-      - "3000:3000"
+  ## Postgress
+  pgdatabase:
+    image: postgres:13
     environment:
-      GF_LOG_LEVEL: debug
-      GF_SECURITY_ADMIN_PASSWORD: yourpasswordhere
-      GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: hadesarchitect-cassandra-datasource
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root 
+      - POSTGRES_DB=train_service 
     volumes:
-      - /var/lib/grafana
-      - ./dist:/var/lib/grafana/plugins/cassandra
+      [./train_data_postgres:/var/lib/postgresql/data:rw]
+    ports:
+      - "5432:5432" #[5431:5432]
+  pgadmin:
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com 
+      - PGADMIN_DEFAULT_PASSWORD=root
+    ports:
+      [8084:80] #[8081:80]
