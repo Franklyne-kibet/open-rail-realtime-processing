@@ -122,23 +122,24 @@ services:
     ports:
       - "9042:9042"
     volumes:
-     - ./cassandra-data:/var/lib/cassandra/data:rw
+     - ./config/cassandra-data:/var/lib/cassandra/data:rw
 
   ## Postgress
   pgdatabase:
-    image: postgres:13
+    image: timescale/timescaledb-postgis:latest-pg13
     environment:
       - POSTGRES_USER=root
       - POSTGRES_PASSWORD=root 
-      - POSTGRES_DB=train_service 
+      - POSTGRES_DB=train_service
+      - POSTGRES_EXTENSIONS=timescaledb
     volumes:
-      [./train_data_postgres:/var/lib/postgresql/data:rw]
+      - ./config/train_data_postgres:/var/lib/postgresql/data:rw
     ports:
-      - "5432:5432" #[5431:5432]
+      - "5432:5432"
   pgadmin:
     image: dpage/pgadmin4
     environment:
       - PGADMIN_DEFAULT_EMAIL=admin@admin.com 
       - PGADMIN_DEFAULT_PASSWORD=root
     ports:
-      [8084:80] #[8081:80]
+      [8084:80]
