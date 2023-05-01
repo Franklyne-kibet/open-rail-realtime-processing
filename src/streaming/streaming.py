@@ -16,6 +16,7 @@ def read_from_kafka(consume_topic: str):
         .load()
     return df_kafka_raw
 
+# Parse the Data From Kafka
 def parse_train_from_kafka_message(df_raw, schema):
     assert df_raw.isStreaming is True, "DataFrame doesn't receive streaming data"
     
@@ -42,6 +43,7 @@ def parse_train_from_kafka_message(df_raw, schema):
 
     return df_flattened
 
+# Write to Cassandra
 def write_cassandra(df):
     if df.isStreaming:
         write_query = df.writeStream \
@@ -54,7 +56,8 @@ def write_cassandra(df):
         return write_query
     else:
         print("Data is not streaming")
-        
+
+# Clean the Data        
 def clean_data(df):
     # Apply data cleaning transformations
     cleaned_df = df \
@@ -70,16 +73,19 @@ def clean_data(df):
         .withColumn("platforms", when(col("platforms") == "null", None).otherwise(col("platforms")).cast("string")) \
         .withColumn("estimated_time", when(col("estimated_time") == "null", None).otherwise(col("estimated_time")).cast("timestamp")) \
         .withColumn("source", when(col("source") == "null", None).otherwise(col("source")).cast("string"))
+        
+    cleaned_df = cleaned_df.dropna(subset=["actual_arrival"])
 
     return cleaned_df
 
+# Write to Postgre DB
 def write_postgres(df, epoch_id):
     # Define PostgreSQL connection properties
-    postgres_properties = {
+    timescaledb_properties = {
         "user": "root",
         "password": "root",
         "driver": "org.postgresql.Driver",
-        "url": "jdbc:postgresql://172.19.0.7:5432/train_service",
+        "url": "jdbc:postgresql://192.168.48.7:5432/train_service",
         "batchsize": "10000"
     }
 
@@ -88,13 +94,13 @@ def write_postgres(df, epoch_id):
 
     # Write the data to PostgreSQL using the batch insert mode
     df.write.jdbc(
-        url=postgres_properties["url"],
+        url=timescaledb_properties["url"],
         table=table_name,
         mode="append",
-        properties=postgres_properties,
+        properties=timescaledb_properties,
     )
 
-
+# Sink to Console
 def sink_console(df, output_mode: str = 'complete', processing_time: str = '5 seconds'):
     write_query = df.writeStream \
         .outputMode(output_mode) \
@@ -108,7 +114,7 @@ if __name__ == "__main__":
     spark = SparkSession \
         .builder \
         .appName("Spark-Trains") \
-        .config("spark.cassandra.connection.host", "172.19.0.5") \
+        .config("spark.cassandra.connection.host", "192.168.48.5") \
         .config("spark.cassandra.connection.port", "9042") \
         .config("spark.cassandra.output.consistency.level", "ONE") \
         .getOrCreate()

@@ -16,7 +16,7 @@ try:
 except ModuleNotFoundError:
     logging.error("Class files not found - please configure the client following steps in README.md!")
 
-
+## Credentials
 USERNAME = ''
 PASSWORD = ''
 HOSTNAME = ''
@@ -159,7 +159,5 @@ connect_and_subscribe(conn)
 
 while True:
     time.sleep(1)
-    
-producer.close()
 
 conn.disconnect()
