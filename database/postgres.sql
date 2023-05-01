@@ -12,3 +12,5 @@ CREATE TABLE train_schedule (
     service_start_date DATE,
     source TEXT
 );
+
+SELECT create_hypertable('train_schedule', 'actual_arrival');

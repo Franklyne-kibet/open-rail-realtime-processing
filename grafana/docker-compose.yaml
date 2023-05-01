@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  grafana:
+    image: grafana/grafana:latest
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=secret
+    volumes:
+      - ./grafana-storage:/var/lib/grafana/data
+    ports:
+      - 3000:3000
+    networks:
+      - kafka-spark-network
+    user: "root:root"
+
+  prometheus:
+    image: prom/prometheus:latest
+    ports:
+      - 9090:9090
+    volumes:
+      - ./config/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - kafka-spark-network
+
+  postgres-exporter:
+    image: bitnami/postgres-exporter:latest
+    ports:
+      - 9187:9187
+    environment:
+      DATA_SOURCE_NAME: postgresql://root:root@pgdatabase:5432/train_service
+    networks:
+      - kafka-spark-network
+  
+networks:
+  kafka-spark-network:
+    name: kafka-spark-network
+    external: true

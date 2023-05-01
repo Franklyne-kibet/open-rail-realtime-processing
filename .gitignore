@@ -1,7 +1,8 @@
 .idea
 .ipynb_checkpoints/
 .history
-**/cassandra-data/*
+**/cassandra-data*
 **__pycache__/
 **/dist/*
-**/train_data_postgres/*
+**/train_data_postgres*
+**/grafana-storage*
